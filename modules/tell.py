@@ -80,13 +80,14 @@ def f_remind(phenny, input):
           continue
        if not tellee in (teller.lower(), phenny.nick, 'me'): # @@
           warn = False
-          whogets.append(tellee)
-          if not phenny.reminders.has_key(tellee):
-             phenny.reminders[tellee] = [(teller, verb, timenow, msg)]
-          else:
-             # if len(phenny.reminders[tellee]) >= maximum:
-             #    warn = True
-             phenny.reminders[tellee].append((teller, verb, timenow, msg))
+          if not tellee in whogets:
+              whogets.append(tellee)
+              if not phenny.reminders.has_key(tellee):
+                 phenny.reminders[tellee] = [(teller, verb, timenow, msg)]
+              else:
+                 # if len(phenny.reminders[tellee]) >= maximum:
+                 #    warn = True
+                 phenny.reminders[tellee].append((teller, verb, timenow, msg))
     if not whogets:               # Only get cute if there are no legits
        rand = random.random()
        if rand > 0.9999: response = "yeah, yeah"
