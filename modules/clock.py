@@ -196,7 +196,10 @@ r_local = re.compile(r'\([a-z]+_[A-Z]+\)')
 @deprecated
 def f_time(self, origin, match, args): 
    """Returns the current time."""
-   tz = match.group(2) or 'GMT'
+   default_tz = 'GMT'
+   if hasattr(self.config, 'default_timezone'):
+       default_tz = self.config.default_timezone
+   tz = match.group(2) or default_tz
 
    # Personal time zones, because they're rad
    if hasattr(self.config, 'timezones'): 
