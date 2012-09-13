@@ -7,56 +7,70 @@ Licensed under the Eiffel Forum License 2.
 http://inamidst.com/phenny/
 """
 
-import sys, os, time, threading, signal
+import sys
+import os
+import time
+import threading
+import signal
 import bot
 
-class Watcher(object): 
-   # Cf. http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/496735
-   def __init__(self):
-      self.child = os.fork()
-      if self.child != 0: 
-         self.watch()
 
-   def watch(self):
-      try: os.wait()
-      except KeyboardInterrupt:
-         self.kill()
-      sys.exit()
+class Watcher(object):
+    # Cf. http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/496735
+    def __init__(self):
+        self.child = os.fork()
+        if self.child != 0:
+            self.watch()
 
-   def kill(self):
-      try: os.kill(self.child, signal.SIGKILL)
-      except OSError: pass
+    def watch(self):
+        try:
+            os.wait()
+        except KeyboardInterrupt:
+            self.kill()
+        sys.exit()
 
-def run_phenny(config): 
-   if hasattr(config, 'delay'): 
-      delay = config.delay
-   else: delay = 20
+    def kill(self):
+        try:
+            os.kill(self.child, signal.SIGKILL)
+        except OSError:
+            pass
 
-   def connect(config): 
-      p = bot.Phenny(config)
-      p.run(config.host, config.port)
 
-   try: Watcher()
-   except Exception, e: 
-      print >> sys.stderr, 'Warning:', e, '(in __init__.py)'
+def run_phenny(config):
+    if hasattr(config, 'delay'):
+        delay = config.delay
+    else:
+        delay = 20
 
-   while True: 
-      try: connect(config)
-      except KeyboardInterrupt: 
-         sys.exit()
+    def connect(config):
+        p = bot.Phenny(config)
+        p.run(config.host, config.port)
 
-      if not isinstance(delay, int): 
-         break
+    try:
+        Watcher()
+    except Exception, e:
+        print >> sys.stderr, 'Warning:', e, '(in __init__.py)'
 
-      warning = 'Warning: Disconnected. Reconnecting in %s seconds...' % delay
-      print >> sys.stderr, warning
-      time.sleep(delay)
+    while True:
+        try:
+            connect(config)
+        except KeyboardInterrupt:
+            sys.exit()
 
-def run(config): 
-   t = threading.Thread(target=run_phenny, args=(config,))
-   if hasattr(t, 'run'): 
-      t.run()
-   else: t.start()
+        if not isinstance(delay, int):
+            break
 
-if __name__ == '__main__': 
-   print __doc__
+        warning = 'Warning: Disconnected. Reconnecting in %s seconds...' % delay
+        print >> sys.stderr, warning
+        time.sleep(delay)
+
+
+def run(config):
+    t = threading.Thread(target=run_phenny, args=(config,))
+    if hasattr(t, 'run'):
+        t.run()
+    else:
+        t.start()
+
+if __name__ == '__main__':
+    print __doc__
