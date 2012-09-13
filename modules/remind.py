@@ -126,8 +126,8 @@ def remind(phenny, input):
    if duration >= 60: 
       w = ''
       if duration >= 3600 * 12: 
-         w += time.strftime(' on %d %b %Y', time.gmtime(t))
-      w += time.strftime(' at %H:%MZ', time.gmtime(t))
+         w += time.strftime(' on %d %b %Y', time.localtime(t))
+      w += time.strftime(' at %H:%MZ', time.localtime(t))
       phenny.reply('Okay, will remind%s' % w)
    else: phenny.reply('Okay, will remind in %s secs' % duration)
 remind.commands = ['in']

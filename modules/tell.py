@@ -112,7 +112,7 @@ f_remind.rule = ('$nick', ['tell', 'ask'], r'(\S+) (.*)')
 def getReminders(phenny, channel, key, tellee): 
    lines = []
    template = "%s: %s <%s> %s %s %s"
-   today = time.strftime('%d %b', time.gmtime())
+   today = time.strftime('%d %b', time.localtime())
 
    for (teller, verb, datetime, msg) in phenny.reminders[key]: 
       if datetime.startswith(today): 
