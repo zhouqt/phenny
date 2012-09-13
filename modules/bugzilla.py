@@ -5,6 +5,7 @@ bugzilla.py - Phenny Bugzilla Module
 Author: Qingtang Zhou <qzhou@redhat.com>
 """
 
+import os
 import commands
 
 
@@ -58,6 +59,31 @@ bz.name = 'bz'
 bz.example = '.bz bzid/ <status> <component> <product>'
 bz.priority = 'low'
 
+
+def bz_info(phenny, input): 
+    if not input.sender.startswith('#'):
+        return
+
+    if hasattr(phenny.config, 'bugzilla_tool_path'):
+         bz_tool_path = phenny.config.bugzilla_tool_path
+    else:
+        phenny.say("Missing bugzilla tools, add 'bugzilla_tool_path'"
+                   " in my config file.")
+        return
+
+    args = input.group(2)
+    cmd = bz_tool_path
+    if args.isdigit():
+        cmd += " query -b %s" % args
+ 
+def bz_url(phenny, input):
+    if not input.sender.startswith('#'):
+        return
+
+    arg = input.group(1)
+    return phenny.reply("Bugzilla URL: %s" % os.path.join(BUGZILLA_URL, arg))
+bz_url.rule = r'[Bb](?:[Uu][Gg]|[Zz])[: ,]*(\d{1,6})'
+bz_url.priority = 'high'
 
 if __name__ == '__main__':
    print __doc__.strip()
