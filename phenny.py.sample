@@ -5,9 +5,12 @@ host = 'irc.example.net'
 channels = ['#example', '#test']
 owner = 'yournickname'
 
-# password is the NickServ password, serverpass is the server password
+## password is the NickServ password
 # password = 'example'
+## serverpass is the server password
 # serverpass = 'serverpass'
+## userserv_pass is used for identify with UserServ.
+# userserv_pass = 'userserv_pass'
 
 # These are people who will be able to use admin.py's functions...
 admins = [owner, 'someoneyoutrust']

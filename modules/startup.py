@@ -53,10 +53,13 @@ def setup(phenny):
       phenny.handle_connect = outer_handle_connect
 
 def startup(phenny, input): 
-   import time
-
    if hasattr(phenny.config, 'serverpass'): 
       phenny.write(('PASS', phenny.config.serverpass))
+
+   if hasattr(phenny.config, 'userserv_pass'):
+      phenny.msg('UserServ', 'login %s %s' % (phenny.config.nick,
+                                              phenny.config.userserv_pass))
+      time.sleep(5)
 
    if hasattr(phenny.config, 'password'): 
       phenny.msg('NickServ', 'IDENTIFY %s' % phenny.config.password)
