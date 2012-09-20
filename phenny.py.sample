@@ -17,6 +17,7 @@ admins = [owner, 'someoneyoutrust']
 # But admin.py is disabled by default, as follows:
 exclude = ['admin']
 
+reserved_group = ['test', 'online', 'offline']
 # If you want to enumerate a list of modules rather than disabling
 # some, use "enable = ['example']", which takes precedent over exclude
 # 

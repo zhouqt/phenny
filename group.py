@@ -18,6 +18,9 @@ class GroupManager(object):
                                     self.phenny.config.host)
         self.db_filename = os.path.join(os.path.expanduser('~/.phenny'), fn)
         self.group_list = []
+        self.reserved_group = []
+        if hasattr(self.phenny.config, "reserved_group"):
+            self.reserved_group = self.phenny.config.reserved_group
         self.load_group_list()
 
     def load_group_list(self, filename=None):
@@ -53,6 +56,10 @@ class GroupManager(object):
         if not name:
             return ("Incorrect group name. "
                     "Please add a '@' in front of group name")
+
+        if name in self.reserved_group:
+            return "Group name '%s' is reserved." % name
+
         if self.has_group(name):
             return "There is alreay a group called '%s'" % name
         grp = Group(name, creator, members)
