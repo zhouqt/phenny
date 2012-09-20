@@ -153,5 +153,41 @@ member_cmd.commands = ["member"]
 member_cmd.example = ".member list/add/del/save @groupname nick nick nick"
 member_cmd.priority = "low"
 
+def say_cmd(phenny, input_msg):
+    usage = "Usage: .say @groupname balabala"
+
+    gm = phenny.group_managers.get(input_msg.sender)
+    if not gm:
+        print >> sys.stderr, ("GroupManager init failed for"
+                             " channel '%s'" % input_msg.sender)
+        return phenny.reply("OOPS!")
+
+    args = input_msg.group(2)
+    if not args:
+        phenny.reply(usage)
+
+    print >> sys.stderr, input_msg.bytes
+    regex_str = r"\.say\s+@(\w+)\s+(.*)"
+    try:
+        grp_name, words = re.findall(regex_str, input_msg.bytes)[0]
+    except Exception, e:
+        print >> sys.stderr, "Err: %s (in group_cmd.py)" % e
+        return phenny.reply(usage)
+
+    grp = gm.get_group(grp_name)
+    if not grp:
+        return phenny.reply("No such group '%s'" % grp_name)
+
+    m_list = " ".join(grp.members)
+    if not m_list:
+        return phenny.replay("No member in this group.")
+
+    phenny.say("%s:   %s has a message for you!" % (m_list, input_msg.nick))
+    phenny.say(words)
+    return
+say_cmd.commands = ['say']
+say_cmd.priority = 'low'
+
+
 if __name__ == '__main__':
    print __doc__.strip()
