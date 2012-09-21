@@ -62,7 +62,7 @@ class GroupManager(object):
 
         if self.has_group(name):
             return "There is alreay a group called '%s'" % name
-        grp = Group(name, creator, members)
+        grp = Group(name, creator)
         self.group_list.append(grp)
         self.save_group_list()
         return "Okay"
@@ -80,10 +80,10 @@ class GroupManager(object):
 
 
 class Group(object):
-    def __init__(self, name, creator, members=[]):
+    def __init__(self, name, creator):
         self.name = name
         self.creator = creator
-        self.members = members
+        self.members = []
 
     def lookup_member(self, member):
         if member in self.members:
