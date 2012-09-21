@@ -7,6 +7,7 @@ About: http://inamidst.com/phenny/
 """
 
 import os
+import string
 import cPickle
 
 
@@ -90,19 +91,60 @@ class Group(object):
             return True
         return False
 
-    def add_member(self, member):
-        if self.lookup_member(member):
-            return False
+    def add_member(self, user, members):
+        msg = ""
+        if user != self.creator:
+            msg = "You're not the creator of this group!"
+            # User can add himself to a group.
+            if not user in members:
+                msg += " You can only add yourself to it."
+                return msg
+            msg += " I'll only add you into this group. "
+            members = user
 
-        self.members.append(member)
-        return True
+        nicks = members.replace(" ", ",").split(",")
+        nicks = map(string.strip, nicks)
+        nicks = [n for n in nicks if n]
 
-    def del_member(self, member):
-        if not self.lookup_member(member):
-            return False
+        if not nicks:
+            msg += "Hi, dude, you should tell me who you want to add"
+            return msg
 
-        self.members.remove(member)
-        return True
+        existed_member = []
+        for n in nicks:
+            if self.lookup_member(n):
+                existed_member.append(n)
+                continue
+            self.members.append(n)
+        msg += "Okay."
+        if existed_member:
+            msg += (" Some of them alread in this group:"
+                    " %s" % " ".join(existed_member))
+        return msg
+
+    def del_member(self, user, members):
+        msg = ""
+        if user != self.creator:
+            msg = "You're not the creator of this group!"
+            # User can add himself to a group.
+            if not user in members:
+                msg += " You can only remove yourself from it."
+                return msg
+            msg += " I'll only remove you from this group. "
+            members = user
+
+        nicks = members.replace(" ", ",").split(",")
+        nicks = map(string.strip, nicks)
+        nicks = [n for n in nicks if n]
+        if not nicks:
+            msg += "Hi, dude, you should tell me who you want to remove"
+            return msg
+
+        for n in nicks:
+            if self.lookup_member(n):
+                self.members.remove(n)
+        msg += "Okay."
+        return msg
 
 
 if __name__ == "__main__":

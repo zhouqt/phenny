@@ -75,44 +75,18 @@ def member_cmd(phenny, input_msg):
                 " nicks in this groups: %s" % (grp.name, grp.creator, m))
 
     def grp_member_add(grp, user, nicks):
-        if user != grp.creator:
-            msg = "You're not the creator of this group!"
-            # User can add himself to a group.
-            if user in nicks:
-                msg += " You can only add yourself to it."
-                grp.add_member(user)
-                gm.save_group_list()
-            return msg
-
-        nicks = nicks.replace(" ", ",").split(",")
-        existed_member = []
-        for n in nicks:
-            if not grp.add_member(n):
-                existed_member.append(n)
-
+        msg = grp.add_member(user, nicks)
         # Call GroupManager to save new group info.
-        gm.save_group_list()
-        if existed_member:
-            return "%s already in this group." % " ".join(existed_member)
-        return "Okay"
+        if "Okay" in msg:
+            gm.save_group_list()
+        return msg
 
     def grp_member_del(grp, user, nicks):
-        if user != grp.creator:
-            msg = "You're not the creator of this group!"
-            # User can del himself from a group.
-            if user in nicks:
-                msg += " You can only remove yourself from it."
-                grp.del_member(user)
-                gm.save_group_list()
-            return msg
-
-        nicks = nicks.replace(" ", ",").split(",")
-        for n in nicks:
-            grp.del_member(n)
-
+        msg = grp.del_member(user, nicks)
         # Call GroupManager to save new group info.
-        gm.save_group_list()
-        return "Okay"
+        if "Okay" in msg:
+            gm.save_group_list()
+        return msg
 
     gm = phenny.group_managers.get(input_msg.sender)
     if not gm:
