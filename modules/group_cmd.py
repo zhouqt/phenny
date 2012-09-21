@@ -154,6 +154,7 @@ member_cmd.example = ".member list/add/del/save @groupname nick nick nick"
 member_cmd.priority = "low"
 
 def say_cmd(phenny, input_msg):
+    """say something to a group."""
     usage = "Usage: .say @groupname balabala"
 
     gm = phenny.group_managers.get(input_msg.sender)
@@ -186,6 +187,7 @@ def say_cmd(phenny, input_msg):
     phenny.say(words)
     return
 say_cmd.commands = ['say']
+say_cmd.example = ".say @groupname balabala"
 say_cmd.priority = 'low'
 
 
