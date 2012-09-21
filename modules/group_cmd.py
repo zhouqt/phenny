@@ -57,7 +57,7 @@ def group_cmd(phenny, input_msg):
             return phenny.reply(ret)
     except KeyError:
         print >> sys.stderr, "Can't find function for %s" % cmd
-        return phenny.reply("OOPS!")
+        return phenny.reply(usage)
 
 group_cmd.commands = ["group"]
 group_cmd.example = ".group list/add/del/load/save @groupname"
@@ -148,7 +148,7 @@ def member_cmd(phenny, input_msg):
             return phenny.reply(ret)
     except KeyError:
         print >> sys.stderr, "Can't find function for %s" % cmd
-        return phenny.reply("OOPS!")
+        return phenny.reply(usage)
 member_cmd.commands = ["member"]
 member_cmd.example = ".member list/add/del/save @groupname nick nick nick"
 member_cmd.priority = "low"
