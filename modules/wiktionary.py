@@ -23,13 +23,13 @@ def text(html):
    return text
 
 def wiktionary(word):
-   bytes = web.get(uri % web.urllib.quote(word.encode('utf-8')))
-   bytes = r_ul.sub('', bytes)
+   msg_bytes = web.get(uri % web.urllib.quote(word.encode('utf-8')))
+   msg_bytes = r_ul.sub('', msg_bytes)
 
    mode = None
    etymology = None
    definitions = {}
-   for line in bytes.splitlines():
+   for line in msg_bytes.splitlines():
       if 'id="Etymology"' in line:
          mode = 'etymology'
       elif 'id="Noun"' in line:
@@ -71,10 +71,10 @@ def format(word, definitions, number=2):
          result += ', '.join(n)
    return result.strip(' .,')
 
-def w(phenny, input):
-   if not input.group(2):
+def w(phenny, input_msg):
+   if not input_msg.group(2):
       return phenny.reply("Nothing to define.")
-   word = input.group(2)
+   word = input_msg.group(2)
    etymology, definitions = wiktionary(word)
    if not definitions:
       phenny.say("Couldn't get any definitions for %s." % word)
@@ -92,7 +92,7 @@ def w(phenny, input):
 w.commands = ['w']
 w.example = '.w bailiwick'
 
-def encarta(phenny, input):
+def encarta(phenny, input_msg):
    return phenny.reply('Microsoft removed Encarta, try .w instead!')
 encarta.commands = ['dict']
 

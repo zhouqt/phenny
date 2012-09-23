@@ -34,12 +34,12 @@ def expand(tweet):
    return r_anchor.sub(replacement, tweet)
 
 def read_tweet(url):
-   bytes = web.get(url)
+   msg_bytes = web.get(url)
    shim = '<div class="content clearfix">'
-   if shim in bytes:
-      bytes = bytes.split(shim, 1).pop()
+   if shim in msg_bytes:
+      msg_bytes = msg_bytes.split(shim, 1).pop()
 
-   for text in r_p.findall(bytes):
+   for text in r_p.findall(msg_bytes):
       text = expand(text)
       text = r_tag.sub('', text)
       text = text.strip()
@@ -67,8 +67,8 @@ def id_tweet(tid):
       return format(tweet, username)
    return "Sorry, couldn't get a tweet from %s" % link
 
-def twitter(phenny, input):
-   arg = input.group(2)
+def twitter(phenny, input_msg):
+   arg = input_msg.group(2)
    if not arg:
       return phenny.reply("Give me a link, a username, or a tweet id")
 

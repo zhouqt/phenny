@@ -19,10 +19,10 @@ def location(name):
    for i in xrange(10):
       u = urllib.urlopen(uri)
       if u is not None: break
-   bytes = u.read()
+   msg_bytes = u.read()
    u.close()
 
-   results = web.json(bytes)
+   results = web.json(msg_bytes)
    try: name = results['geonames'][0]['name']
    except IndexError:
       return '?', '?', '0', '0'
@@ -37,10 +37,10 @@ class GrumbleError(object):
 def local(icao, hour, minute):
    uri = ('http://www.flightstats.com/' +
           'go/Airport/airportDetails.do?airportCode=%s')
-   try: bytes = web.get(uri % icao)
+   try: msg_bytes = web.get(uri % icao)
    except AttributeError:
       raise GrumbleError('A WEBSITE HAS GONE DOWN WTF STUPID WEB')
-   m = r_from.search(bytes)
+   m = r_from.search(msg_bytes)
    if m:
       offset = m.group(1)
       lhour = int(hour) + int(offset)
@@ -85,14 +85,14 @@ def f_weather(self, origin, match, args):
       return
 
    uri = 'http://weather.noaa.gov/pub/data/observations/metar/stations/%s.TXT'
-   try: bytes = web.get(uri % icao_code)
+   try: msg_bytes = web.get(uri % icao_code)
    except AttributeError:
       raise GrumbleError('OH CRAP NOAA HAS GONE DOWN THE WEB IS BROKEN')
-   if 'Not Found' in bytes:
+   if 'Not Found' in msg_bytes:
       self.msg(origin.sender, icao_code+': no such ICAO code, or no NOAA data')
       return
 
-   metar = bytes.splitlines().pop()
+   metar = msg_bytes.splitlines().pop()
    metar = metar.split(' ')
 
    if len(metar[0]) == 4:

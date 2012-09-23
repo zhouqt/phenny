@@ -9,11 +9,11 @@ http://inamidst.com/phenny/
 
 import web
 
-def val(phenny, input):
+def val(phenny, input_msg):
    """Check a webpage using the W3C Markup Validator."""
-   if not input.group(2):
+   if not input_msg.group(2):
       return phenny.reply("Nothing to validate.")
-   uri = input.group(2)
+   uri = input_msg.group(2)
    if not uri.startswith('http://'):
       uri = 'http://' + uri
 

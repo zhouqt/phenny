@@ -11,7 +11,7 @@ http://inamidst.com/phenny/
 import re, urllib
 import web
 
-def translate(text, input='auto', output='en'):
+def translate(text, input_msg='auto', output='en'):
    raw = False
    if output.endswith('-raw'):
       output = output[:-4]
@@ -25,11 +25,11 @@ def translate(text, input='auto', output='en'):
       'Gecko/20071127 Firefox/2.0.0.11'
    )]
 
-   input, output = urllib.quote(input), urllib.quote(output)
+   input_msg, output = urllib.quote(input_msg), urllib.quote(output)
    text = urllib.quote(text)
 
    result = opener.open('http://translate.google.com/translate_a/t?' +
-      ('client=t&hl=en&sl=%s&tl=%s&multires=1' % (input, output)) +
+      ('client=t&hl=en&sl=%s&tl=%s&multires=1' % (input_msg, output)) +
       ('&otf=1&ssel=0&tsel=0&uptl=en&sc=1&text=%s' % text)).read()
 
    while ',,' in result:
@@ -46,25 +46,25 @@ def translate(text, input='auto', output='en'):
 
 def tr(phenny, context):
    """Translates a phrase, with an optional language hint."""
-   input, output, phrase = context.groups()
+   input_msg, output, phrase = context.groups()
 
    phrase = phrase.encode('utf-8')
 
    if (len(phrase) > 350) and (not context.admin):
       return phenny.reply('Phrase must be under 350 characters.')
 
-   input = input or 'auto'
-   input = input.encode('utf-8')
+   input_msg = input_msg or 'auto'
+   input_msg = input_msg.encode('utf-8')
    output = (output or 'en').encode('utf-8')
 
-   if input != output:
-      msg, input = translate(phrase, input, output)
+   if input_msg != output:
+      msg, input_msg = translate(phrase, input_msg, output)
       if isinstance(msg, str):
          msg = msg.decode('utf-8')
       if msg:
          msg = web.decode(msg) # msg.replace('&#39;', "'")
-         msg = '"%s" (%s to %s, translate.google.com)' % (msg, input, output)
-      else: msg = 'The %s to %s translation failed, sorry!' % (input, output)
+         msg = '"%s" (%s to %s, translate.google.com)' % (msg, input_msg, output)
+      else: msg = 'The %s to %s translation failed, sorry!' % (input_msg, output)
 
       phenny.reply(msg)
    else: phenny.reply('Language guessing failed, so try suggesting one!')
@@ -73,9 +73,9 @@ tr.rule = ('$nick', ur'(?:([a-z]{2}) +)?(?:([a-z]{2}|en-raw) +)?["“](.+?)["”
 tr.example = '$nickname: "mon chien"? or $nickname: fr "mon chien"?'
 tr.priority = 'low'
 
-def tr2(phenny, input):
+def tr2(phenny, input_msg):
    """Translates a phrase, with an optional language hint."""
-   command = input.group(2)
+   command = input_msg.group(2)
    if not command:
       return phenny.reply("Need something to translate!")
    command = command.encode('utf-8')
@@ -93,7 +93,7 @@ def tr2(phenny, input):
          command = cmd
    phrase = command
 
-   if (len(phrase) > 350) and (not input.admin):
+   if (len(phrase) > 350) and (not input_msg.admin):
       return phenny.reply('Phrase must be under 350 characters.')
 
    src, dest = args
@@ -112,8 +112,8 @@ def tr2(phenny, input):
 tr2.commands = ['tr']
 tr2.priority = 'low'
 
-def mangle(phenny, input):
-   phrase = input.group(2).encode('utf-8')
+def mangle(phenny, input_msg):
+   phrase = input_msg.group(2).encode('utf-8')
    for lang in ['fr', 'de', 'es', 'it', 'ja']:
       backup = phrase
       phrase = translate(phrase, 'en', lang)

@@ -7,8 +7,8 @@ Licensed under the Eiffel Forum License 2.
 http://inamidst.com/phenny/
 """
 
-def replaced(phenny, input):
-   command = input.group(1)
+def replaced(phenny, input_msg):
+   command = input_msg.group(1)
    responses = {
       'cp': '.cp has been replaced by .u',
       'pc': '.pc has been replaced by .u',

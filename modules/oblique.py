@@ -17,8 +17,8 @@ r_tag = re.compile(r'<[^>]+>')
 
 def mappings(uri):
    result = {}
-   bytes = web.get(uri)
-   for item in r_item.findall(bytes):
+   msg_bytes = web.get(uri)
+   for item in r_item.findall(msg_bytes):
       item = r_tag.sub('', item).strip(' \t\r\n')
       if not ' ' in item: continue
 
@@ -28,19 +28,19 @@ def mappings(uri):
       result[command] = template.replace('&amp;', '&')
    return result
 
-def service(phenny, input, command, args):
+def service(phenny, input_msg, command, args):
    t = o.services[command]
    template = t.replace('${args}', urllib.quote(args.encode('utf-8'), ''))
-   template = template.replace('${nick}', urllib.quote(input.nick, ''))
-   uri = template.replace('${sender}', urllib.quote(input.sender, ''))
+   template = template.replace('${nick}', urllib.quote(input_msg.nick, ''))
+   uri = template.replace('${sender}', urllib.quote(input_msg.sender, ''))
 
    info = web.head(uri)
    if isinstance(info, list):
       info = info[0]
    if not 'text/plain' in info.get('content-type', '').lower():
       return phenny.reply("Sorry, the service didn't respond in plain text.")
-   bytes = web.get(uri)
-   lines = bytes.splitlines()
+   msg_bytes = web.get(uri)
+   lines = msg_bytes.splitlines()
    if not lines:
       return phenny.reply("Sorry, the service didn't respond any output.")
    try: line = lines[0].encode('utf-8')[:350]
@@ -57,9 +57,9 @@ def refresh(phenny):
    o.services = mappings(o.serviceURI)
    return len(o.services), set(o.services) - set(old)
 
-def o(phenny, input):
+def o(phenny, input_msg):
    """Call a webservice."""
-   text = input.group(2)
+   text = input_msg.group(2)
 
    if (not o.services) or (text == 'refresh'):
       length, added = refresh(phenny)
@@ -87,24 +87,24 @@ def o(phenny, input):
 
    if hasattr(phenny.config, 'external'):
       default = phenny.config.external.get('*')
-      manifest = phenny.config.external.get(input.sender, default)
+      manifest = phenny.config.external.get(input_msg.sender, default)
       if manifest:
          commands = set(manifest)
          if (command not in commands) and (manifest[0] != '!'):
             return phenny.reply('Sorry, %s is not whitelisted' % command)
          elif (command in commands) and (manifest[0] == '!'):
             return phenny.reply('Sorry, %s is blacklisted' % command)
-   service(phenny, input, command, args)
+   service(phenny, input_msg, command, args)
 o.commands = ['o']
 o.example = '.o servicename arg1 arg2 arg3'
 o.services = {}
 o.serviceURI = None
 
-def snippet(phenny, input):
+def snippet(phenny, input_msg):
    if not o.services:
       refresh(phenny)
 
-   search = urllib.quote(input.group(2).encode('utf-8'))
+   search = urllib.quote(input_msg.group(2).encode('utf-8'))
    py = "BeautifulSoup.BeautifulSoup(re.sub('<.*?>|(?<= ) +', '', " + \
         "''.join(chr(ord(c)) for c in " + \
         "eval(urllib.urlopen('http://ajax.googleapis.com/ajax/serv" + \
@@ -112,7 +112,7 @@ def snippet(phenny, input):
         ".replace('null', 'None'))['responseData']['resul" + \
         "ts'][0]['content'].decode('unicode-escape')).replace(" + \
         "'&quot;', '\x22')), convertEntities=True)"
-   service(phenny, input, 'py', py)
+   service(phenny, input_msg, 'py', py)
 snippet.commands = ['snippet']
 
 if __name__ == '__main__':

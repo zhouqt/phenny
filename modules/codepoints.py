@@ -64,12 +64,12 @@ def codepoint_extended(arg):
       if r_search.search(name):
          yield about(u, cp, name)
 
-def u(phenny, input):
+def u(phenny, input_msg):
    """Look up unicode information."""
-   arg = input.bytes[3:]
+   arg = input_msg.msg_bytes[3:]
    # phenny.msg('#inamidst', '%r' % arg)
    if not arg:
-      return phenny.reply('You gave me zero length input.')
+      return phenny.reply('You gave me zero length input_msg.')
    elif not arg.strip(' '):
       if len(arg) > 1: return phenny.reply('%s SPACEs (U+0020)' % len(arg))
       return phenny.reply('1 SPACE (U+0020)')
@@ -119,16 +119,16 @@ def u(phenny, input):
       # look up more than three podecoints
       elif len(text) <= 10:
          phenny.reply(' '.join('U+%04X' % ord(c) for c in text))
-      else: phenny.reply('Sorry, your input is too long!')
+      else: phenny.reply('Sorry, your input_msg is too long!')
 u.commands = ['u']
 u.example = '.u 203D'
 
-def bytes(phenny, input):
-   """Show the input as pretty printed bytes."""
-   b = input.bytes
+def msg_bytes(phenny, input_msg):
+   """Show the input_msg as pretty printed msg_bytes."""
+   b = input_msg.msg_bytes
    phenny.reply('%r' % b[b.find(' ') + 1:])
-bytes.commands = ['bytes']
-bytes.example = '.bytes \xe3\x8b\xa1'
+msg_bytes.commands = ['msg_bytes']
+msg_bytes.example = '.msg_bytes \xe3\x8b\xa1'
 
 if __name__ == '__main__':
    print __doc__.strip()

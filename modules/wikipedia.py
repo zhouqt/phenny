@@ -67,26 +67,26 @@ def wikipedia(term, language='en', last=False):
       else: t = term
       q = urllib.quote(t)
       u = wikiuri % (language, q)
-      bytes = web.get(u)
-   else: bytes = web.get(wikiuri % (language, term))
+      msg_bytes = web.get(u)
+   else: msg_bytes = web.get(wikiuri % (language, term))
 
-   if bytes.startswith('\x1f\x8b\x08\x00\x00\x00\x00\x00'):
-      f = StringIO.StringIO(bytes)
+   if msg_bytes.startswith('\x1f\x8b\x08\x00\x00\x00\x00\x00'):
+      f = StringIO.StringIO(msg_bytes)
       f.seek(0)
       gzip_file = gzip.GzipFile(fileobj=f)
-      bytes = gzip_file.read()
+      msg_bytes = gzip_file.read()
       gzip_file.close()
       f.close()
 
-   bytes = r_tr.sub('', bytes)
+   msg_bytes = r_tr.sub('', msg_bytes)
 
    if not last:
-      r = r_redirect.search(bytes[:4096])
+      r = r_redirect.search(msg_bytes[:4096])
       if r:
          term = urllib.unquote(r.group(1))
          return wikipedia(term, language=language, last=True)
 
-   paragraphs = r_paragraph.findall(bytes)
+   paragraphs = r_paragraph.findall(msg_bytes)
 
    if not paragraphs:
       if not last:
@@ -149,8 +149,8 @@ def wikipedia(term, language='en', last=False):
    term = term.decode('utf-8').encode('utf-8')
    return sentence + ' - ' + (wikiuri % (language, term))
 
-def wik(phenny, input):
-   origterm = input.groups()[1]
+def wik(phenny, input_msg):
+   origterm = input_msg.groups()[1]
    if not origterm:
       return phenny.say('Perhaps you meant ".wik Zen"?')
    origterm = origterm.encode('utf-8')

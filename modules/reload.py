@@ -10,11 +10,11 @@ http://inamidst.com/phenny/
 import sys, os.path, time, imp
 import irc
 
-def f_reload(phenny, input):
+def f_reload(phenny, input_msg):
    """Reloads a module, for use by admins only."""
-   if not input.admin: return
+   if not input_msg.admin: return
 
-   name = input.group(2)
+   name = input_msg.group(2)
    if name == phenny.config.owner:
       return phenny.reply('What?')
 

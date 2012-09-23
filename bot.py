@@ -17,14 +17,14 @@ import irc
 home = os.getcwd()
 
 
-def decode(bytes):
+def decode(msg_bytes):
     try:
-        text = bytes.decode('utf-8')
+        text = msg_bytes.decode('utf-8')
     except UnicodeDecodeError:
         try:
-            text = bytes.decode('iso-8859-1')
+            text = msg_bytes.decode('iso-8859-1')
         except UnicodeDecodeError:
-            text = bytes.decode('cp1252')
+            text = msg_bytes.decode('cp1252')
     return text
 
 
@@ -181,14 +181,14 @@ class Phenny(irc.Bot):
 
         return PhennyWrapper(self)
 
-    def input(self, origin, text, bytes, match, event, args):
+    def input_msg(self, origin, text, msg_bytes, match, event, args):
         class CommandInput(unicode):
-            def __new__(cls, text, origin, bytes, match, event, args):
+            def __new__(cls, text, origin, msg_bytes, match, event, args):
                 s = unicode.__new__(cls, text)
                 s.sender = origin.sender
                 s.nick = origin.nick
                 s.event = event
-                s.bytes = bytes
+                s.msg_bytes = msg_bytes
                 s.match = match
                 s.group = match.group
                 s.groups = match.groups
@@ -197,11 +197,11 @@ class Phenny(irc.Bot):
                 s.owner = origin.nick == self.config.owner
                 return s
 
-        return CommandInput(text, origin, bytes, match, event, args)
+        return CommandInput(text, origin, msg_bytes, match, event, args)
 
-    def call(self, func, origin, phenny, input):
+    def call(self, func, origin, phenny, input_msg):
         try:
-            func(phenny, input)
+            func(phenny, input_msg)
         except Exception, e:
             self.error(origin)
 
@@ -214,8 +214,8 @@ class Phenny(irc.Bot):
         return False
 
     def dispatch(self, origin, args):
-        bytes, event, args = args[0], args[1], args[2:]
-        text = decode(bytes)
+        msg_bytes, event, args = args[0], args[1], args[2:]
+        text = decode(msg_bytes)
 
         for priority in ('high', 'medium', 'low'):
             items = self.commands[priority].items()
@@ -232,14 +232,14 @@ class Phenny(irc.Bot):
                         continue
 
                     phenny = self.wrapped(origin, text, match)
-                    input = self.input(origin, text, bytes, match, event, args)
+                    input_msg = self.input_msg(origin, text, msg_bytes, match, event, args)
 
                     if func.thread:
-                        targs = (func, origin, phenny, input)
+                        targs = (func, origin, phenny, input_msg)
                         t = threading.Thread(target=self.call, args=targs)
                         t.start()
                     else:
-                        self.call(func, origin, phenny, input)
+                        self.call(func, origin, phenny, input_msg)
 
                     for source in [origin.sender, origin.nick]:
                         try:

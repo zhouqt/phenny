@@ -16,7 +16,7 @@ Remember to use comma ',' when status/component/product .
 eg. query all NEW and ASSIGNED bugs in qemu-kvm component of product 'Red Hat Enterprise Linux 6',
 type: '.bz NEW qemu-kvm rhel6'"""
 
-def bz(phenny, input):
+def bz(phenny, input_msg):
     if hasattr(phenny.config, 'bugzilla_tool_path'):
          bz_tool_path = phenny.config.bugzilla_tool_path
     else:
@@ -25,7 +25,7 @@ def bz(phenny, input):
         return
 
     cmd = bz_tool_path
-    args = input.group(2)
+    args = input_msg.group(2)
     if not args:
         return phenny.reply(usage)
 
@@ -49,7 +49,7 @@ def bz(phenny, input):
     if "\n" in out:
         phenny.reply("Many outputs! Send you private message instead.")
         for line in out.split("\n"):
-            phenny.msg(input.nick, line)
+            phenny.msg(input_msg.nick, line)
         return
     else:
         return phenny.reply(out)
@@ -60,8 +60,8 @@ bz.example = '.bz bzid/ <status> <component> <product>'
 bz.priority = 'low'
 
 
-def bz_info(phenny, input):
-    if not input.sender.startswith('#'):
+def bz_info(phenny, input_msg):
+    if not input_msg.sender.startswith('#'):
         return
 
     if hasattr(phenny.config, 'bugzilla_tool_path'):
@@ -71,16 +71,16 @@ def bz_info(phenny, input):
                    " in my config file.")
         return
 
-    args = input.group(2)
+    args = input_msg.group(2)
     cmd = bz_tool_path
     if args.isdigit():
         cmd += " query -b %s" % args
 
-def bz_url(phenny, input):
-    if not input.sender.startswith('#'):
+def bz_url(phenny, input_msg):
+    if not input_msg.sender.startswith('#'):
         return
 
-    arg = input.group(1)
+    arg = input_msg.group(1)
     return phenny.reply("Bugzilla URL: %s" % os.path.join(BUGZILLA_URL, arg))
 bz_url.rule = r'.*?[Bb](?:[Uu][Gg]|[Zz])[: ,]*(\d{1,6}).*'
 bz_url.priority = 'high'

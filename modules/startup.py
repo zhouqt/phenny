@@ -30,7 +30,7 @@ def setup(phenny):
          phenny.write(('PING', phenny.config.host))
       phenny.data['startup.setup.pingloop'] = pingloop
 
-      def pong(phenny, input):
+      def pong(phenny, input_msg):
          try:
             # print "PONG!"
             phenny.data['startup.setup.timer'].cancel()
@@ -52,7 +52,7 @@ def setup(phenny):
 
       phenny.handle_connect = outer_handle_connect
 
-def startup(phenny, input):
+def startup(phenny, input_msg):
    if hasattr(phenny.config, 'serverpass'):
       phenny.write(('PASS', phenny.config.serverpass))
 

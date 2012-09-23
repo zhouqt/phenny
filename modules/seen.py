@@ -10,9 +10,9 @@ http://inamidst.com/phenny/
 import time
 from tools import deprecated
 
-def seen(phenny, input):
+def seen(phenny, input_msg):
    """.seen <nick> - Reports when <nick> was last seen."""
-   nick = input.group(2)
+   nick = input_msg.group(2)
    if not nick:
       return phenny.reply("Need a nickname to search for...")
    nick = nick.lower()

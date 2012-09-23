@@ -24,9 +24,9 @@ def get(uri):
     if not uri.startswith('http'):
         return
     u = urllib.urlopen(uri)
-    bytes = u.read()
+    msg_bytes = u.read()
     u.close()
-    return bytes
+    return msg_bytes
 
 
 def head(uri):
@@ -43,9 +43,9 @@ def post(uri, query):
         return
     data = urllib.urlencode(query)
     u = urllib.urlopen(uri, data)
-    bytes = u.read()
+    msg_bytes = u.read()
     u.close()
-    return bytes
+    return msg_bytes
 
 r_entity = re.compile(r'&([^;\s]+);')
 

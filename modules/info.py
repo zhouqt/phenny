@@ -7,9 +7,9 @@ Licensed under the Eiffel Forum License 2.
 http://inamidst.com/phenny/
 """
 
-def doc(phenny, input):
+def doc(phenny, input_msg):
    """Shows a command's documentation, and possibly an example."""
-   name = input.group(1)
+   name = input_msg.group(1)
    name = name.lower()
 
    if phenny.doc.has_key(name):
@@ -20,9 +20,9 @@ doc.rule = ('$nick', '(?i)(?:help|doc) +([A-Za-z]+)(?:\?+)?$')
 doc.example = '$nickname: doc tell?'
 doc.priority = 'low'
 
-def commands(phenny, input):
+def commands(phenny, input_msg):
    # This function only works in private message
-   if input.sender.startswith('#'): return
+   if input_msg.sender.startswith('#'): return
    names = ', '.join(sorted(phenny.doc.iterkeys()))
    phenny.say('Commands I recognise: ' + names + '.')
    phenny.say(("For help, do '%s: help example?' where example is the " +
@@ -30,7 +30,7 @@ def commands(phenny, input):
 commands.commands = ['commands']
 commands.priority = 'low'
 
-def help(phenny, input):
+def help(phenny, input_msg):
    response = (
       'Hi, I\'m a bot. Say ".commands" to me in private for a list ' +
       'of my commands, or see http://inamidst.com/phenny/ for more ' +
@@ -40,7 +40,7 @@ def help(phenny, input):
 help.rule = ('$nick', r'(?i)help(?:[?!]+)?$')
 help.priority = 'low'
 
-def stats(phenny, input):
+def stats(phenny, input_msg):
    """Show information on command usage patterns."""
    commands = {}
    users = {}

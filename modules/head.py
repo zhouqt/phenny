@@ -12,16 +12,16 @@ from htmlentitydefs import name2codepoint
 import web
 from tools import deprecated
 
-def head(phenny, input):
+def head(phenny, input_msg):
    """Provide HTTP HEAD information."""
-   uri = input.group(2)
+   uri = input_msg.group(2)
    uri = (uri or '').encode('utf-8')
    if ' ' in uri:
       uri, header = uri.rsplit(' ', 1)
    else: uri, header = uri, None
 
    if not uri and hasattr(phenny, 'last_seen_uri'):
-      try: uri = phenny.last_seen_uri[input.sender]
+      try: uri = phenny.last_seen_uri[input_msg.sender]
       except KeyError: return phenny.say('?')
 
    if not uri.startswith('htt'):
@@ -53,7 +53,7 @@ def head(phenny, input):
          modified = time.strptime(modified, '%a, %d %b %Y %H:%M:%S %Z')
          data.append(time.strftime('%Y-%m-%d %H:%M:%S UTC', modified))
       if info.has_key('content-length'):
-         data.append(info['content-length'] + ' bytes')
+         data.append(info['content-length'] + ' msg_bytes')
       phenny.reply(', '.join(data))
    else:
       headerlower = header.lower()
@@ -131,14 +131,14 @@ def f_title(self, origin, match, args):
          return
 
       u = urllib2.urlopen(req)
-      bytes = u.read(262144)
+      msg_bytes = u.read(262144)
       u.close()
 
    except IOError:
       self.msg(origin.sender, "Can't connect to %s" % uri)
       return
 
-   m = r_title.search(bytes)
+   m = r_title.search(msg_bytes)
    if m:
       title = m.group(1)
       title = title.strip()
@@ -177,11 +177,11 @@ def f_title(self, origin, match, args):
    else: self.msg(origin.sender, origin.nick + ': No title found')
 f_title.commands = ['title']
 
-def noteuri(phenny, input):
-   uri = input.group(1).encode('utf-8')
+def noteuri(phenny, input_msg):
+   uri = input_msg.group(1).encode('utf-8')
    if not hasattr(phenny.bot, 'last_seen_uri'):
       phenny.bot.last_seen_uri = {}
-   phenny.bot.last_seen_uri[input.sender] = uri
+   phenny.bot.last_seen_uri[input_msg.sender] = uri
 noteuri.rule = r'.*(http[s]?://[^<> "\x01]+)[,.]?'
 noteuri.priority = 'low'
 

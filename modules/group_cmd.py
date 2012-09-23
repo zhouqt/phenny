@@ -36,10 +36,10 @@ def group_cmd(phenny, input_msg):
         phenny.reply(usage)
         return phenny.reply(list_grp())
 
-    print >> sys.stderr, input_msg.bytes
+    print >> sys.stderr, input_msg.msg_bytes
     regex_str = r"\.group\s+(\w{3,5})(?:\s+@(\w+)(?:\s+(\w+)|(?:.*))|(?:.*))"
     try:
-        cmd, name, param = re.findall(regex_str, input_msg.bytes)[0]
+        cmd, name, param = re.findall(regex_str, input_msg.msg_bytes)[0]
     except Exception, e:
         print >> sys.stderr, "Err: %s (in group_cmd.py)" % e
         return phenny.reply(usage)
@@ -99,10 +99,10 @@ def member_cmd(phenny, input_msg):
     if not args:
         return phenny.reply(usage)
 
-    print >> sys.stderr, input_msg.bytes
+    print >> sys.stderr, input_msg.msg_bytes
     regex_str = r"\.member\s+(\w{3,4})\s+@(\w+)\s*(.*)"
     try:
-        cmd, name, nicks = re.findall(regex_str, input_msg.bytes)[0]
+        cmd, name, nicks = re.findall(regex_str, input_msg.msg_bytes)[0]
     except Exception, e:
         print >> sys.stderr, "Err: %s (in group_cmd.py)" % e
         return phenny.reply(usage)
@@ -142,10 +142,10 @@ def say_cmd(phenny, input_msg):
     if not args:
         phenny.reply(usage)
 
-    print >> sys.stderr, input_msg.bytes
+    print >> sys.stderr, input_msg.msg_bytes
     regex_str = r"\.say\s+@(\w+)\s+(.*)"
     try:
-        grp_name, words = re.findall(regex_str, input_msg.bytes)[0]
+        grp_name, words = re.findall(regex_str, input_msg.msg_bytes)[0]
     except Exception, e:
         print >> sys.stderr, "Err: %s (in group_cmd.py)" % e
         return phenny.reply(usage)

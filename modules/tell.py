@@ -57,11 +57,11 @@ def setup(self):
             f.close()
     self.reminders = loadReminders(self.tell_filename) # @@ tell
 
-def f_remind(phenny, input):
-    teller = input.nick
+def f_remind(phenny, input_msg):
+    teller = input_msg.nick
 
     # @@ Multiple comma-separated tellees? Cf. Terje, #swhack, 2006-04-15
-    verb, tellee, msg = input.groups()
+    verb, tellee, msg = input_msg.groups()
     verb = verb.encode('utf-8')
     tellee = tellee.encode('utf-8')
     msg = msg.encode('utf-8')
@@ -124,11 +124,11 @@ def getReminders(phenny, channel, key, tellee):
    return lines
 
 
-def message(phenny, input):
-   if not input.sender.startswith('#'): return
+def message(phenny, input_msg):
+   if not input_msg.sender.startswith('#'): return
 
-   tellee = input.nick
-   channel = input.sender
+   tellee = input_msg.nick
+   channel = input_msg.sender
 
    if not os: return
    if not os.path.exists(phenny.tell_filename):

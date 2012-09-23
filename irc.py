@@ -71,10 +71,10 @@ class Bot(asynchat.async_chat):
 
     def write(self, args, text=None):
         # This is a safe version of __write
-        def safe(input):
-            input = input.replace('\n', '')
-            input = input.replace('\r', '')
-            return input.encode('utf-8')
+        def safe(input_msg):
+            input_msg = input_msg.replace('\n', '')
+            input_msg = input_msg.replace('\r', '')
+            return input_msg.encode('utf-8')
         try:
             args = [safe(arg) for arg in args]
             if text is not None:
@@ -172,9 +172,9 @@ class Bot(asynchat.async_chat):
                 self.sending.release()
                 return
 
-        def safe(input):
-            input = input.replace('\n', '')
-            return input.replace('\r', '')
+        def safe(input_msg):
+            input_msg = input_msg.replace('\n', '')
+            return input_msg.replace('\r', '')
         self.__write(('PRIVMSG', safe(recipient)), safe(text))
         self.stack.append((time.time(), text))
         self.stack = self.stack[-10:]

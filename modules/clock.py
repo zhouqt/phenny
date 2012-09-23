@@ -250,7 +250,7 @@ f_time.commands = ['t']
 f_time.name = 't'
 f_time.example = '.t UTC'
 
-def beats(phenny, input):
+def beats(phenny, input_msg):
    """Shows the internet time in Swatch beats."""
    beats = ((time.time() + 3600) % 86400) / 86.4
    beats = int(math.floor(beats))
@@ -258,10 +258,10 @@ def beats(phenny, input):
 beats.commands = ['beats']
 beats.priority = 'low'
 
-def divide(input, by):
-   return (input / by), (input % by)
+def divide(input_msg, by):
+   return (input_msg / by), (input_msg % by)
 
-def yi(phenny, input):
+def yi(phenny, input_msg):
    """Shows whether it is currently yi or not."""
    quadraels, remainder = divide(int(time.time()), 1753200)
    raels = quadraels * 4
@@ -272,7 +272,7 @@ def yi(phenny, input):
 yi.commands = ['yi']
 yi.priority = 'low'
 
-def tock(phenny, input):
+def tock(phenny, input_msg):
    """Shows the time from the USNO's atomic clock."""
    u = urllib.urlopen('http://tycho.usno.navy.mil/cgi-bin/timer.pl')
    info = u.info()
@@ -281,7 +281,7 @@ def tock(phenny, input):
 tock.commands = ['tock']
 tock.priority = 'high'
 
-def npl(phenny, input):
+def npl(phenny, input_msg):
    """Shows the time from NPL's SNTP server."""
    # for server in ('ntp1.npl.co.uk', 'ntp2.npl.co.uk'):
    client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

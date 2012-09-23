@@ -26,9 +26,9 @@ def google_ajax(query):
    args = '?v=1.0&safe=off&q=' + web.urllib.quote(query)
    handler = web.urllib._urlopener
    web.urllib._urlopener = Grab()
-   bytes = web.get(uri + args)
+   msg_bytes = web.get(uri + args)
    web.urllib._urlopener = handler
-   return web.json(bytes)
+   return web.json(msg_bytes)
 
 def google_search(query):
    results = google_ajax(query)
@@ -56,9 +56,9 @@ def formatnumber(n):
 def old_gc(query):
    return formatnumber(google_count(query))
 
-def g(phenny, input):
-   """Queries Google for the specified input."""
-   query = input.group(2)
+def g(phenny, input_msg):
+   """Queries Google for the specified input_msg."""
+   query = input_msg.group(2)
    if not query:
       return phenny.reply('.g what?')
    query = query.encode('utf-8')
@@ -67,16 +67,16 @@ def g(phenny, input):
       phenny.reply(uri)
       if not hasattr(phenny.bot, 'last_seen_uri'):
          phenny.bot.last_seen_uri = {}
-      phenny.bot.last_seen_uri[input.sender] = uri
+      phenny.bot.last_seen_uri[input_msg.sender] = uri
    elif uri is False: phenny.reply("Problem getting data from Google.")
    else: phenny.reply("No results found for '%s'." % query)
 g.commands = ['g']
 g.priority = 'high'
 g.example = '.g swhack'
 
-def oldgc(phenny, input):
-   """Returns the number of Google results for the specified input."""
-   query = input.group(2)
+def oldgc(phenny, input_msg):
+   """Returns the number of Google results for the specified input_msg."""
+   query = input_msg.group(2)
    if not query:
       return phenny.reply('.gc what?')
    query = query.encode('utf-8')
@@ -89,10 +89,10 @@ r_query = re.compile(
    r'\+?"[^"\\]*(?:\\.[^"\\]*)*"|\[[^]\\]*(?:\\.[^]\\]*)*\]|\S+'
 )
 
-def gcs(phenny, input):
-   if not input.group(2):
+def gcs(phenny, input_msg):
+   if not input_msg.group(2):
       return phenny.reply("Nothing to compare.")
-   queries = r_query.findall(input.group(2))
+   queries = r_query.findall(input_msg.group(2))
    if len(queries) > 6:
       return phenny.reply('Sorry, can only compare up to six things.')
 
@@ -115,14 +115,14 @@ r_bing = re.compile(r'<h3><a href="([^"]+)"')
 def bing_search(query, lang='en-GB'):
    query = web.urllib.quote(query)
    base = 'http://www.bing.com/search?mkt=%s&q=' % lang
-   bytes = web.get(base + query)
-   for result in r_bing.findall(bytes):
+   msg_bytes = web.get(base + query)
+   for result in r_bing.findall(msg_bytes):
       if "r.msn.com/" in result: continue
       return result
 
-def bing(phenny, input):
-   """Queries Bing for the specified input."""
-   query = input.group(2)
+def bing(phenny, input_msg):
+   """Queries Bing for the specified input_msg."""
+   query = input_msg.group(2)
    if query.startswith(':'):
       lang, query = query.split(' ', 1)
       lang = lang[1:]
@@ -136,7 +136,7 @@ def bing(phenny, input):
       phenny.reply(uri)
       if not hasattr(phenny.bot, 'last_seen_uri'):
          phenny.bot.last_seen_uri = {}
-      phenny.bot.last_seen_uri[input.sender] = uri
+      phenny.bot.last_seen_uri[input_msg.sender] = uri
    else: phenny.reply("No results found for '%s'." % query)
 bing.commands = ['bing']
 bing.example = '.bing swhack'
@@ -147,12 +147,12 @@ def duck_search(query):
    query = query.replace('!', '')
    query = web.urllib.quote(query)
    uri = 'http://duckduckgo.com/html/?q=%s&kl=uk-en' % query
-   bytes = web.get(uri)
-   m = r_duck.search(bytes)
+   msg_bytes = web.get(uri)
+   m = r_duck.search(msg_bytes)
    if m: return web.decode(m.group(1))
 
-def duck(phenny, input):
-   query = input.group(2)
+def duck(phenny, input_msg):
+   query = input_msg.group(2)
    if not query: return phenny.reply('.ddg what?')
 
    query = query.encode('utf-8')
@@ -161,14 +161,14 @@ def duck(phenny, input):
       phenny.reply(uri)
       if not hasattr(phenny.bot, 'last_seen_uri'):
          phenny.bot.last_seen_uri = {}
-      phenny.bot.last_seen_uri[input.sender] = uri
+      phenny.bot.last_seen_uri[input_msg.sender] = uri
    else: phenny.reply("No results found for '%s'." % query)
 duck.commands = ['duck', 'ddg']
 
-def search(phenny, input):
-   if not input.group(2):
+def search(phenny, input_msg):
+   if not input_msg.group(2):
       return phenny.reply('.search for what?')
-   query = input.group(2).encode('utf-8')
+   query = input_msg.group(2).encode('utf-8')
    gu = google_search(query) or '-'
    bu = bing_search(query) or '-'
    du = duck_search(query) or '-'
@@ -190,10 +190,10 @@ def search(phenny, input):
    phenny.reply(result)
 search.commands = ['search']
 
-def suggest(phenny, input):
-   if not input.group(2):
+def suggest(phenny, input_msg):
+   if not input_msg.group(2):
       return phenny.reply("No query term.")
-   query = input.group(2).encode('utf-8')
+   query = input_msg.group(2).encode('utf-8')
    uri = 'http://websitedev.de/temp-bin/suggest.pl?q='
    answer = web.get(uri + web.urllib.quote(query).replace('+', '%2B'))
    if answer:
@@ -205,17 +205,17 @@ def new_gc(query):
    uri = 'https://www.google.com/search?hl=en&q='
    uri = uri + web.urllib.quote(query).replace('+', '%2B')
    if '"' in query: uri += '&tbs=li:1'
-   bytes = web.get(uri)
-   if "did not match any documents" in bytes:
+   msg_bytes = web.get(uri)
+   if "did not match any documents" in msg_bytes:
       return "0"
-   for result in re.compile(r'(?ims)([0-9,]+) results?').findall(bytes):
+   for result in re.compile(r'(?ims)([0-9,]+) results?').findall(msg_bytes):
       return result
    return None
 
-def ngc(phenny, input):
-   if not input.group(2):
+def ngc(phenny, input_msg):
+   if not input_msg.group(2):
       return phenny.reply("No query term.")
-   query = input.group(2).encode('utf-8')
+   query = input_msg.group(2).encode('utf-8')
    result = new_gc(query)
    if result:
       phenny.say(query + ": " + result)
@@ -225,10 +225,10 @@ ngc.commands = ['ngc']
 ngc.priority = 'high'
 ngc.example = '.ngc extrapolate'
 
-def gc(phenny, input):
-   if not input.group(2):
+def gc(phenny, input_msg):
+   if not input_msg.group(2):
       return phenny.reply("No query term.")
-   query = input.group(2).encode('utf-8')
+   query = input_msg.group(2).encode('utf-8')
    old = old_gc(query) or "?"
    new = new_gc(query) or "?"
    phenny.say(query + ": " + old + " / " + new)

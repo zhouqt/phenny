@@ -101,10 +101,10 @@ periods = '|'.join(scaling.keys())
 p_command = r'\.in ([0-9]+(?:\.[0-9]+)?)\s?((?:%s)\b)?:?\s?(.*)' % periods
 r_command = re.compile(p_command)
 
-def remind(phenny, input):
-   m = r_command.match(input.bytes)
+def remind(phenny, input_msg):
+   m = r_command.match(input_msg.msg_bytes)
    if not m:
-      return phenny.reply("Sorry, didn't understand the input.")
+      return phenny.reply("Sorry, didn't understand the input_msg.")
    length, scale, message = m.groups()
 
    length = float(length)
@@ -116,7 +116,7 @@ def remind(phenny, input):
    else: duration = int(duration)
 
    t = int(time.time()) + duration
-   reminder = (input.sender, input.nick, message)
+   reminder = (input_msg.sender, input_msg.nick, message)
 
    try: phenny.rdb[t].append(reminder)
    except KeyError: phenny.rdb[t] = [reminder]

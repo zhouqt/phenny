@@ -57,9 +57,9 @@ def etymology(word):
    grab = urllib._urlopener
    urllib._urlopener = Grab()
    urllib._urlopener.addheader("Referer", "http://www.etymonline.com/")
-   bytes = web.get(etyuri % web.urllib.quote(word))
+   msg_bytes = web.get(etyuri % web.urllib.quote(word))
    urllib._urlopener = grab
-   definitions = r_definition.findall(bytes)
+   definitions = r_definition.findall(msg_bytes)
 
    if not definitions:
       return None
