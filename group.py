@@ -79,6 +79,20 @@ class GroupManager(object):
         self.save_group_list()
         return "Okay"
 
+    def chown(self, name, user, new_owner):
+        grp = self.get_group(name)
+        if not grp:
+            return "No such group '%s'" % name
+        if user != grp.creator:
+            return ("You're not the group creator,"
+                   " ask group creator '%s' for help" % grp.creator)
+
+        new_owner = new_owner.strip()
+        if not new_owner:
+            return "Whom do you want to transfer this group to?"
+        grp.creator = new_owner
+        self.save_group_list()
+        return "Okay"
 
 class Group(object):
     def __init__(self, name, creator):

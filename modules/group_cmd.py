@@ -16,7 +16,7 @@ def setup(phenny):
 
 
 def group_cmd(phenny, input_msg):
-    usage = "Usage: .group list/add/del/load/save @groupname"
+    usage = "Usage: .group list/add/del/load/save/chown @groupname"
 
     def list_grp():
         if gm.group_list:
@@ -37,9 +37,9 @@ def group_cmd(phenny, input_msg):
         return phenny.reply(list_grp())
 
     print >> sys.stderr, input_msg.bytes
-    regex_str = r"\.group\s+(\w{3,4})(?:\s+@(\w+)|(?:.*))"
+    regex_str = r"\.group\s+(\w{3,5})(?:\s+@(\w+)(?:\s+(\w+)|(?:.*))|(?:.*))"
     try:
-        cmd, name = re.findall(regex_str, input_msg.bytes)[0]
+        cmd, name, param = re.findall(regex_str, input_msg.bytes)[0]
     except Exception, e:
         print >> sys.stderr, "Err: %s (in group_cmd.py)" % e
         return phenny.reply(usage)
@@ -50,6 +50,7 @@ def group_cmd(phenny, input_msg):
     cmd_dict["del"] = gm.del_group
     cmd_dict["load"] = lambda x,y: gm.load_group_list()
     cmd_dict["save"] = lambda x,y: gm.save_group_list()
+    cmd_dict["chown"] = lambda x,y: gm.chown(x, y, param)
 
     try:
         if callable(cmd_dict[cmd]):
@@ -60,7 +61,7 @@ def group_cmd(phenny, input_msg):
         return phenny.reply(usage)
 
 group_cmd.commands = ["group"]
-group_cmd.example = ".group list/add/del/load/save @groupname"
+group_cmd.example = ".group list/add/del/load/save/chown @groupname"
 group_cmd.priority = "low"
 
 
