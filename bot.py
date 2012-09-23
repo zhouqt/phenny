@@ -60,12 +60,9 @@ class Phenny(irc.Bot):
 
         modules = []
         excluded_modules = getattr(self.config, 'exclude', [])
+        filenames = [m for m in filenames if m not in excluded_modules]
         for filename in filenames:
             name = os.path.basename(filename)[:-3]
-            if name in excluded_modules:
-                continue
-            # if name in sys.modules:
-            #    del sys.modules[name]
             try:
                 module = imp.load_source(name, filename)
             except Exception, e:
