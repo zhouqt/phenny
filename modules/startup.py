@@ -9,7 +9,7 @@ http://inamidst.com/phenny/
 
 import threading, time
 
-def setup(phenny): 
+def setup(phenny):
    # by clsn
    phenny.data = {}
    refresh_delay = 300.0
@@ -21,7 +21,7 @@ def setup(phenny):
       def close():
          print "Nobody PONGed our PING, restarting"
          phenny.handle_close()
-      
+
       def pingloop():
          timer = threading.Timer(refresh_delay, close, ())
          phenny.data['startup.setup.timer'] = timer
@@ -52,8 +52,8 @@ def setup(phenny):
 
       phenny.handle_connect = outer_handle_connect
 
-def startup(phenny, input): 
-   if hasattr(phenny.config, 'serverpass'): 
+def startup(phenny, input):
+   if hasattr(phenny.config, 'serverpass'):
       phenny.write(('PASS', phenny.config.serverpass))
 
    if hasattr(phenny.config, 'userserv_pass'):
@@ -61,17 +61,17 @@ def startup(phenny, input):
                                               phenny.config.userserv_pass))
       time.sleep(5)
 
-   if hasattr(phenny.config, 'password'): 
+   if hasattr(phenny.config, 'password'):
       phenny.msg('NickServ', 'IDENTIFY %s' % phenny.config.password)
       time.sleep(5)
 
    # Cf. http://swhack.com/logs/2005-12-05#T19-32-36
-   for channel in phenny.channels: 
+   for channel in phenny.channels:
       phenny.write(('JOIN', channel))
       time.sleep(0.5)
 startup.rule = r'(.*)'
 startup.event = '251'
 startup.priority = 'low'
 
-if __name__ == '__main__': 
+if __name__ == '__main__':
    print __doc__.strip()

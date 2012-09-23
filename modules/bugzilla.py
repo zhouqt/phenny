@@ -60,7 +60,7 @@ bz.example = '.bz bzid/ <status> <component> <product>'
 bz.priority = 'low'
 
 
-def bz_info(phenny, input): 
+def bz_info(phenny, input):
     if not input.sender.startswith('#'):
         return
 
@@ -75,7 +75,7 @@ def bz_info(phenny, input):
     cmd = bz_tool_path
     if args.isdigit():
         cmd += " query -b %s" % args
- 
+
 def bz_url(phenny, input):
     if not input.sender.startswith('#'):
         return

@@ -109,13 +109,13 @@ def f_remind(phenny, input):
 f_remind.rule = ('$nick', ['tell', 'ask'], r'(\S+) (.*)')
 
 
-def getReminders(phenny, channel, key, tellee): 
+def getReminders(phenny, channel, key, tellee):
    lines = []
    template = "%s: %s <%s> %s %s %s"
    today = time.strftime('%d %b', time.localtime())
 
-   for (teller, verb, datetime, msg) in phenny.reminders[key]: 
-      if datetime.startswith(today): 
+   for (teller, verb, datetime, msg) in phenny.reminders[key]:
+      if datetime.startswith(today):
          datetime = datetime[len(today)+1:]
       lines.append(template % (tellee, datetime, teller, verb, tellee, msg))
 
@@ -124,14 +124,14 @@ def getReminders(phenny, channel, key, tellee):
    return lines
 
 
-def message(phenny, input): 
+def message(phenny, input):
    if not input.sender.startswith('#'): return
 
    tellee = input.nick
    channel = input.sender
 
    if not os: return
-   if not os.path.exists(phenny.tell_filename): 
+   if not os.path.exists(phenny.tell_filename):
       return
 
    reminders = []
@@ -156,5 +156,5 @@ def message(phenny, input):
 message.rule = r'(.*)'
 message.priority = 'low'
 
-if __name__ == '__main__': 
+if __name__ == '__main__':
    print __doc__.strip()

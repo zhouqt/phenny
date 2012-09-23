@@ -19,38 +19,38 @@ r_definition = re.compile(r'(?ims)<dd[^>]*>.*?</dd>')
 r_tag = re.compile(r'<(?!!)[^>]+>')
 r_whitespace = re.compile(r'[\t\r\n ]+')
 
-class Grab(urllib.URLopener): 
-   def __init__(self, *args): 
+class Grab(urllib.URLopener):
+   def __init__(self, *args):
       self.version = 'Mozilla/5.0 (Phenny)'
       urllib.URLopener.__init__(self, *args)
-   def http_error_default(self, url, fp, errcode, errmsg, headers): 
+   def http_error_default(self, url, fp, errcode, errmsg, headers):
       return urllib.addinfourl(fp, [headers, errcode], "http:" + url)
 
 abbrs = [
-   'cf', 'lit', 'etc', 'Ger', 'Du', 'Skt', 'Rus', 'Eng', 'Amer.Eng', 'Sp', 
-   'Fr', 'N', 'E', 'S', 'W', 'L', 'Gen', 'J.C', 'dial', 'Gk', 
-   '19c', '18c', '17c', '16c', 'St', 'Capt', 'obs', 'Jan', 'Feb', 'Mar', 
+   'cf', 'lit', 'etc', 'Ger', 'Du', 'Skt', 'Rus', 'Eng', 'Amer.Eng', 'Sp',
+   'Fr', 'N', 'E', 'S', 'W', 'L', 'Gen', 'J.C', 'dial', 'Gk',
+   '19c', '18c', '17c', '16c', 'St', 'Capt', 'obs', 'Jan', 'Feb', 'Mar',
    'Apr', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'c', 'tr', 'e', 'g'
 ]
 t_sentence = r'^.*?(?<!%s)(?:\.(?= [A-Z0-9]|\Z)|\Z)'
 r_sentence = re.compile(t_sentence % ')(?<!'.join(abbrs))
 
-def unescape(s): 
+def unescape(s):
    s = s.replace('&gt;', '>')
    s = s.replace('&lt;', '<')
    s = s.replace('&amp;', '&')
    return s
 
-def text(html): 
+def text(html):
    html = r_tag.sub('', html)
    html = r_whitespace.sub(' ', html)
    return unescape(html).strip()
 
-def etymology(word): 
+def etymology(word):
    # @@ <nsh> sbp, would it be possible to have a flag for .ety to get 2nd/etc
    # entries? - http://swhack.com/logs/2006-07-19#T15-05-29
-   
-   if len(word) > 25: 
+
+   if len(word) > 25:
       raise ValueError("Word too long: %s[...]" % word[:10])
    word = {'axe': 'ax/axe'}.get(word, word)
 
@@ -61,23 +61,23 @@ def etymology(word):
    urllib._urlopener = grab
    definitions = r_definition.findall(bytes)
 
-   if not definitions: 
+   if not definitions:
       return None
 
    defn = text(definitions[0])
    m = r_sentence.match(defn)
-   if not m: 
+   if not m:
       return None
    sentence = m.group(0)
 
-   # try: 
+   # try:
    #    sentence = unicode(sentence, 'iso-8859-1')
    #    sentence = sentence.encode('utf-8')
    # except: pass
    sentence = web.decode(sentence)
 
    maxlength = 275
-   if len(sentence) > maxlength: 
+   if len(sentence) > maxlength:
       sentence = sentence[:maxlength]
       words = sentence[:-5].split(' ')
       words.pop()
@@ -87,20 +87,20 @@ def etymology(word):
    return sentence + ' - etymonline.com'
 
 @deprecated
-def f_etymology(self, origin, match, args): 
+def f_etymology(self, origin, match, args):
    word = match.group(2)
 
    try: result = etymology(word.encode('iso-8859-1'))
-   except IOError: 
+   except IOError:
       msg = "Can't connect to etymonline.com (%s)" % (etyuri % word)
       self.msg(origin.sender, msg)
       return
-   except AttributeError: 
+   except AttributeError:
       result = None
 
-   if result is not None: 
+   if result is not None:
       self.msg(origin.sender, result)
-   else: 
+   else:
       uri = etysearch % word
       msg = 'Can\'t find the etymology for "%s". Try %s' % (word, uri)
       self.msg(origin.sender, msg)
@@ -109,6 +109,6 @@ f_etymology.rule = (['ety'], r"(.+?)$")
 f_etymology.thread = True
 f_etymology.priority = 'high'
 
-if __name__=="__main__": 
+if __name__=="__main__":
    import sys
    print etymology(sys.argv[1])

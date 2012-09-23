@@ -22,7 +22,7 @@ r_breaks = re.compile(r'(?ims)[\r\n]+')
 def entity(*args, **kargs):
    return web.entity(*args, **kargs).encode('utf-8')
 
-def decode(html): 
+def decode(html):
    return web.r_entity.sub(entity, html)
 
 def expand(tweet):

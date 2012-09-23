@@ -9,12 +9,12 @@ http://inamidst.com/phenny/
 
 import web
 
-def val(phenny, input): 
+def val(phenny, input):
    """Check a webpage using the W3C Markup Validator."""
    if not input.group(2):
       return phenny.reply("Nothing to validate.")
    uri = input.group(2)
-   if not uri.startswith('http://'): 
+   if not uri.startswith('http://'):
       uri = 'http://' + uri
 
    path = '/check?uri=%s;output=xml' % web.urllib.quote(uri)
@@ -22,15 +22,15 @@ def val(phenny, input):
 
    result = uri + ' is '
 
-   if isinstance(info, list): 
+   if isinstance(info, list):
       return phenny.say('Got HTTP response %s' % info[1])
 
-   if info.has_key('X-W3C-Validator-Status'): 
+   if info.has_key('X-W3C-Validator-Status'):
       result += str(info['X-W3C-Validator-Status'])
-      if info['X-W3C-Validator-Status'] != 'Valid': 
-         if info.has_key('X-W3C-Validator-Errors'): 
+      if info['X-W3C-Validator-Status'] != 'Valid':
+         if info.has_key('X-W3C-Validator-Errors'):
             n = int(info['X-W3C-Validator-Errors'].split(' ')[0])
-            if n != 1: 
+            if n != 1:
                result += ' (%s errors)' % n
             else: result += ' (%s error)' % n
    else: result += 'Unvalidatable: no X-W3C-Validator-Status'
@@ -39,5 +39,5 @@ def val(phenny, input):
 val.rule = (['val'], r'(?i)(\S+)')
 val.example = '.val http://www.w3.org/'
 
-if __name__ == '__main__': 
+if __name__ == '__main__':
    print __doc__.strip()
