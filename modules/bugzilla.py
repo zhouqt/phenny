@@ -82,7 +82,7 @@ def bz_url(phenny, input_msg):
 
     arg = input_msg.group(1)
     return phenny.reply("Bugzilla URL: %s" % os.path.join(BUGZILLA_URL, arg))
-bz_url.rule = r'.*?[Bb](?:[Uu][Gg]|[Zz])[: ,]*(\d{1,6}).*'
+bz_url.rule = r'.*?[Bb](?:[Uu][Gg]|[Zz])[: ,#]*(\d{1,6}).*'
 bz_url.priority = 'high'
 
 if __name__ == '__main__':
