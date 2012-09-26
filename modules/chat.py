@@ -24,6 +24,10 @@ _unescape = HTMLParser().unescape
 
 def chat(phenny, input_msg):
     words = input_msg.group(1)
+
+    if re.findall(ur'[\u4e00-\u9fff]+', words):
+        return phenny.reply(OOPS)
+
     nick = input_msg.nick.lower()
     if nick not in CHAT_SESSIONS.keys():
         custid = '%016x' % random.getrandbits(64)
