@@ -93,7 +93,7 @@ def bz_info(phenny, input_msg):
     args = input_msg.group(1)
     query_bug_with_id(phenny, args)
     return
-bz_info.rule = r'.*?https:\/\/bugzilla\.redhat\.com\/.*?(\d{1,6}).*'
+bz_info.rule = r'.*?https:\/\/bugzilla\.redhat\.com\/show_bug.*?(\d{1,6}).*'
 bz_info.priority = 'high'
 
 def bz_url(phenny, input_msg):
