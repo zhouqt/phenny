@@ -7,6 +7,7 @@ Author: Qingtang Zhou <qzhou@redhat.com>
 
 import os
 import commands
+import re
 
 
 BUGZILLA_URL = "https://bugzilla.redhat.com/"
@@ -82,6 +83,7 @@ bz.example = '.bz bzid/ <status> <component> <product>'
 bz.priority = 'low'
 
 
+bz_url_pattern = r'.*?https:\/\/bugzilla\.redhat\.com\/show_bug.*?(\d{1,6}).*?'
 def bz_info(phenny, input_msg):
     if not input_msg.sender.startswith('#'):
         return
@@ -90,10 +92,10 @@ def bz_info(phenny, input_msg):
     if not cmd:
         return
 
-    args = input_msg.group(1)
-    query_bug_with_id(phenny, args)
+    for m in re.findall(bz_url_pattern, input_msg.msg_bytes):
+        query_bug_with_id(phenny, m)
     return
-bz_info.rule = r'.*?https:\/\/bugzilla\.redhat\.com\/show_bug.*?(\d{1,6}).*'
+bz_info.rule = bz_url_pattern
 bz_info.priority = 'high'
 
 def bz_url(phenny, input_msg):
