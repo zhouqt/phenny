@@ -156,7 +156,7 @@ def say_cmd(phenny, input_msg):
 
     m_list = " ".join(grp.members)
     if not m_list:
-        return phenny.replay("No member in this group.")
+        return phenny.reply("No member in this group.")
 
     phenny.say("%s:   %s has a message for you!" % (m_list, input_msg.nick))
     phenny.say(words)
