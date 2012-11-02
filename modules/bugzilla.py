@@ -21,7 +21,7 @@ BZ_FORMAT_STR = "#%{bug_id}: %{status} - %{assigned_to} - %{short_desc} [%{targe
 
 def get_bz_tool_path(phenny):
     if hasattr(phenny.config, 'bugzilla_tool_path'):
-         return phenny.config.bugzilla_tool_path
+        return phenny.config.bugzilla_tool_path
 
     phenny.say("Missing bugzilla tools, add 'bugzilla_tool_path'"
                " in my config file.")
@@ -83,7 +83,7 @@ bz.example = '.bz bzid/ <status> <component> <product>'
 bz.priority = 'low'
 
 
-bz_url_pattern = r'.*?https:\/\/bugzilla\.redhat\.com\/show_bug.*?(\d{1,6}).*?'
+bz_url_pattern = r'.*?https:\/\/bugzilla\.redhat\.com\/show_bug.*?(\d+).*?'
 def bz_info(phenny, input_msg):
     if not input_msg.sender.startswith('#'):
         return
@@ -92,8 +92,8 @@ def bz_info(phenny, input_msg):
     if not cmd:
         return
 
-    for m in re.findall(bz_url_pattern, input_msg.msg_bytes):
-        query_bug_with_id(phenny, m)
+    for _ in re.findall(bz_url_pattern, input_msg.msg_bytes):
+        query_bug_with_id(phenny, _)
     return
 bz_info.rule = bz_url_pattern
 bz_info.priority = 'high'
@@ -112,4 +112,4 @@ bz_url.rule = bz_id_pattern
 bz_url.priority = 'high'
 
 if __name__ == '__main__':
-   print __doc__.strip()
+    print __doc__.strip()
