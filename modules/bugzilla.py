@@ -98,15 +98,17 @@ def bz_info(phenny, input_msg):
 bz_info.rule = bz_url_pattern
 bz_info.priority = 'high'
 
+bz_id_pattern = r'.*?[Bb](?:[Uu][Gg]|[Zz])[: ,#]*(\d{6}).*?'
 def bz_url(phenny, input_msg):
     if not input_msg.sender.startswith('#'):
         return
 
-    arg = input_msg.group(1)
-    phenny.reply("Bugzilla URL: %s" % os.path.join(BUGZILLA_URL, arg))
-    query_bug_with_id(phenny, arg)
+    for _ in re.findall(bz_id_pattern, input_msg.msg_bytes):
+        url = os.path.join(BUGZILLA_URL, r"show_bug.cgi?id=%s" % _)
+        phenny.reply("Bugzilla URL: %s" % url)
+        query_bug_with_id(phenny, _)
     return
-bz_url.rule = r'.*?[Bb](?:[Uu][Gg]|[Zz])[: ,#]*(\d{1,6}).*'
+bz_url.rule = bz_id_pattern
 bz_url.priority = 'high'
 
 if __name__ == '__main__':
