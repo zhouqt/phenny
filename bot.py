@@ -110,7 +110,6 @@ class Phenny(irc.Bot):
             return pattern.replace('$nick', r'%s[,: ]+' % re.escape(self.nick))
 
         for name, func in self.variables.iteritems():
-            # print name, func
             if not hasattr(func, 'priority'):
                 func.priority = 'medium'
 
@@ -214,10 +213,15 @@ class Phenny(irc.Bot):
         msg_bytes, event, args = args[0], args[1], args[2:]
         text = decode(msg_bytes)
 
+        last_cmd = False
+
         for priority in ('high', 'medium', 'low'):
             items = self.commands[priority].items()
             for regexp, funcs in items:
                 for func in funcs:
+                    if last_cmd:
+                        break
+
                     if event != func.event:
                         continue
 
@@ -237,6 +241,9 @@ class Phenny(irc.Bot):
                         t.start()
                     else:
                         self.call(func, origin, phenny, input_msg)
+
+                    if hasattr(func, "last_cmd") and func.last_cmd:
+                        last_cmd = True
 
                     for source in [origin.sender, origin.nick]:
                         try:
