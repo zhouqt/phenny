@@ -107,6 +107,7 @@ def f_remind(phenny, input_msg):
 
     dumpReminders(phenny.tell_filename, phenny.reminders) # @@ tell
 f_remind.rule = ('$nick', ['tell', 'ask'], r'(\S+) (.*)')
+f_remind.last_cmd = True
 
 
 def getReminders(phenny, channel, key, tellee):

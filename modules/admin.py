@@ -19,6 +19,7 @@ def join(phenny, input_msg):
 join.rule = r'\.join (#\S+)(?: *(\S+))?'
 join.priority = 'low'
 join.example = '.join #example or .join #example key'
+join.last_cmd = True
 
 def part(phenny, input_msg):
    """Part the specified channel. This is an admin-only command."""
@@ -29,6 +30,7 @@ def part(phenny, input_msg):
 part.commands = ['part']
 part.priority = 'low'
 part.example = '.part #example'
+part.last_cmd = True
 
 def quit(phenny, input_msg):
    """Quit from the server. This is an owner-only command."""
@@ -39,6 +41,7 @@ def quit(phenny, input_msg):
       __import__('os')._exit(0)
 quit.commands = ['quit']
 quit.priority = 'low'
+quit.last_cmd = True
 
 def msg(phenny, input_msg):
    # Can only be done in privmsg by an admin
@@ -49,6 +52,7 @@ def msg(phenny, input_msg):
       phenny.msg(a, b)
 msg.rule = (['msg'], r'(#?\S+) (.+)')
 msg.priority = 'low'
+msg.last_cmd = True
 
 def me(phenny, input_msg):
    # Can only be done in privmsg by an admin
@@ -58,6 +62,7 @@ def me(phenny, input_msg):
       phenny.msg(input_msg.group(2) or input_msg.sender, msg)
 me.rule = (['me'], r'(#?\S+) (.+)')
 me.priority = 'low'
+me.last_cmd = True
 
 if __name__ == '__main__':
    print __doc__.strip()

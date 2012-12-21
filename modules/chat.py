@@ -57,6 +57,7 @@ def chat(phenny, input_msg):
 chat.name = 'chat'
 chat.rule = ("$nick", r"(.*)")
 chat.priority = 'low'
+#chat.last_cmd = True
 
 if __name__ == '__main__':
    print __doc__.strip()

@@ -81,6 +81,7 @@ bz.commands = ['bz']
 bz.name = 'bz'
 bz.example = '.bz bzid/ <status> <component> <product>'
 bz.priority = 'low'
+bz.last_cmd = True
 
 
 bz_url_pattern = r'.*?https:\/\/bugzilla\.redhat\.com\/show_bug.*?(\d+).*?'
@@ -97,6 +98,8 @@ def bz_info(phenny, input_msg):
     return
 bz_info.rule = bz_url_pattern
 bz_info.priority = 'high'
+bz_info.last_cmd = True
+
 
 bz_id_pattern = r'.*?[Bb](?:[Uu][Gg]|[Zz])[: ,#]*(\d{6}).*?'
 def bz_url(phenny, input_msg):
@@ -110,6 +113,8 @@ def bz_url(phenny, input_msg):
     return
 bz_url.rule = bz_id_pattern
 bz_url.priority = 'high'
+bz_url.last_cmd = True
+
 
 if __name__ == '__main__':
     print __doc__.strip()

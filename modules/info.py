@@ -29,16 +29,16 @@ def commands(phenny, input_msg):
                "name of the command you want help for.") % phenny.nick)
 commands.commands = ['commands']
 commands.priority = 'low'
+commands.last_cmd = True
 
-def help(phenny, input_msg):
-   response = (
-      'Hi, I\'m a bot. Say ".commands" to me in private for a list ' +
-      'of my commands, or see http://inamidst.com/phenny/ for more ' +
-      'general details. My owner is %s.'
-   ) % phenny.config.owner
-   phenny.reply(response)
-help.rule = ('$nick', r'(?i)help(?:[?!]+)?$')
-help.priority = 'low'
+def help_info(phenny, input_msg):
+   resp = 'Hi, I\'m a bot. Say ".commands" to me in private for a list of my'
+   resp += ' commands, or see https://wiki.test.redhat.com/KvmQE/IamABot'
+   resp += ' for more general details. My owner is %s.' % phenny.config.owner
+   phenny.reply(resp)
+help_info.rule = ('$nick', r'(?i)help(?:[?!]+)?$')
+help_info.priority = 'low'
+help_info.last_cmd = True
 
 def stats(phenny, input_msg):
    """Show information on command usage patterns."""
@@ -84,6 +84,7 @@ def stats(phenny, input_msg):
    phenny.say(chreply.rstrip(', '))
 stats.commands = ['stats']
 stats.priority = 'low'
+stats.last_cmd = True
 
 if __name__ == '__main__':
    print __doc__.strip()

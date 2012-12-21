@@ -51,6 +51,7 @@ issue.commands = ['issue']
 issue.name = 'issue'
 issue.example = '.issue issue_id'
 issue.priority = 'low'
+issue.last_cmd = True
 
 
 redmine_url_pattern = r'.*?https?:\/\/redmine\.englab\.nay\.redhat\.com\/issues/(\d+).*?'
@@ -63,6 +64,7 @@ def issue_info(phenny, input_msg):
     return
 issue_info.rule = redmine_url_pattern
 issue_info.priority = 'high'
+issue_info.last_cmd = True
 
 if __name__ == '__main__':
     print __doc__.strip()
