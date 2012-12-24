@@ -23,6 +23,11 @@ reserved_group = ['test', 'online', 'offline']
 # 
 # enable = []
 
+
+get_title_blacklist = [
+        ".rpm$",
+]
+
 # Directories to load user modules from
 # e.g. /path/to/my/modules
 extra = []
