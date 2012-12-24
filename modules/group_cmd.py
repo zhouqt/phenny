@@ -63,6 +63,7 @@ def group_cmd(phenny, input_msg):
 group_cmd.commands = ["group"]
 group_cmd.example = ".group list/add/del/load/save/chown @groupname"
 group_cmd.priority = "low"
+group_cmd.last_cmd = True
 
 
 def member_cmd(phenny, input_msg):
@@ -127,6 +128,7 @@ def member_cmd(phenny, input_msg):
 member_cmd.commands = ["member"]
 member_cmd.example = ".member list/add/del/save @groupname nick nick nick"
 member_cmd.priority = "low"
+member_cmd.last_cmd = True
 
 def say_cmd(phenny, input_msg):
     """say something to a group."""
@@ -163,7 +165,7 @@ def say_cmd(phenny, input_msg):
     return
 say_cmd.commands = ['say']
 say_cmd.example = ".say @groupname balabala"
-say_cmd.priority = 'low'
+say_cmd.priority = 'high'
 
 
 if __name__ == '__main__':

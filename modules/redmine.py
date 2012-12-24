@@ -63,7 +63,7 @@ def issue_info(phenny, input_msg):
         query_issue_with_id(phenny, _)
     return
 issue_info.rule = redmine_url_pattern
-issue_info.priority = 'high'
+issue_info.priority = 'medium'
 issue_info.last_cmd = True
 
 if __name__ == '__main__':

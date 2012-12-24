@@ -228,7 +228,7 @@ def get_title(phenny, input_msg):
         return
     return phenny.say("TITLE: %s" % msg)
 get_title.rule = r'.*(https?://[^<> "\x01]+)[,.]?'
-get_title.priority = 'medium'
+get_title.priority = 'low'
 get_title.last_cmd = True
 
 

@@ -80,7 +80,7 @@ def bz(phenny, input_msg):
 bz.commands = ['bz']
 bz.name = 'bz'
 bz.example = '.bz bzid/ <status> <component> <product>'
-bz.priority = 'low'
+bz.priority = 'medium'
 bz.last_cmd = True
 
 
@@ -97,7 +97,7 @@ def bz_info(phenny, input_msg):
         query_bug_with_id(phenny, _)
     return
 bz_info.rule = bz_url_pattern
-bz_info.priority = 'high'
+bz_info.priority = 'medium'
 bz_info.last_cmd = True
 
 
@@ -112,7 +112,7 @@ def bz_url(phenny, input_msg):
         query_bug_with_id(phenny, _)
     return
 bz_url.rule = bz_id_pattern
-bz_url.priority = 'high'
+bz_url.priority = 'medium'
 bz_url.last_cmd = True
 
 
